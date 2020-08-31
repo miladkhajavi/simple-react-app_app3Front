@@ -52,6 +52,10 @@
   height: 20rem;
   width: 100%;
 }
+.item-map-main{
+  width: 100px;
+  height: 100px;
+}
 
 @media (min-width: 768px) {
   .place-item__image {
