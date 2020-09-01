@@ -22,9 +22,10 @@ const inputReducer = (state, action) => {
 
 const Input = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: "",
+    value: props.value||"",
     isTouch:false,
-    isValid: false,
+    // valid is in edit place and false is for add place form
+    isValid: props.valid ||false,
   });
 
   const {id , onInput}= props
