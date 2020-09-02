@@ -22,6 +22,12 @@ const formReducer = (state, action) => {
         },
         isValid: formValid,
       };
+
+      case 'SET_DATA':
+        return{
+          inputs:action.inputs,
+          isValid:action.formValid
+        }
     default:
       return state;
   }
@@ -42,6 +48,15 @@ export const useForm = (initialInputs, initialFormValidity) => {
           isValid: isValid,
         });
       }, []);
-      
-      return [formState , inputHandler] 
+
+      // use it when get data update from server (not use for add or inserts)
+      const setFormData = useCallback((inputData,formValidity)=>{
+        dispatch({
+          type:'SET_DATA',
+          inputs:inputData,
+          formValid:formValidity
+        })
+      },[]);
+
+      return [formState , inputHandler, setFormData] 
 };
