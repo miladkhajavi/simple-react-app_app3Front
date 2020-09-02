@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Input from "../../shared/components/FormElement/Input";
 import Button from "../../shared/components/FormElement/Button";
+import Card from "../../shared/components/UIelement/card";
 import { useForm } from "../../shared/hooks/form-hook";
 import {
   VALIDATOR_MINLENGTH,
@@ -40,36 +41,70 @@ const DUMMY_PLACES = [
   },
 ];
 
-
 const UpdatePlace = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   const placeId = useParams().placeId;
-  const identifiedPlace = DUMMY_PLACES.find((e) => e.id === placeId);
 
   //hooks
- const[formState,inputHandler]= useForm({
-      title:{
-          value:identifiedPlace.title,
-          isValid:true
+  const [formState, inputHandler, setFormData] = useForm(
+    {
+      title: {
+        value: "",
+        isValid: false,
       },
-      description:{
-          value:identifiedPlace.description,
-          isValid:true
+      description: {
+        value: "",
+        isValid: false,
       },
-  },true)
-  //***     
+    },
+    false
+  );
+  //***
+
+  const identifiedPlace = DUMMY_PLACES.find((e) => e.id === placeId);
+
+  useEffect(() => {
+    if (identifiedPlace) {
+      setFormData(
+        {
+          title: {
+            value: identifiedPlace.title,
+            isValid: false,
+          },
+          description: {
+            value: identifiedPlace.description,
+            isValid: false,
+          },
+        },
+        true
+      );
+    }
+    setIsLoading(false);
+  }, [setFormData, identifiedPlace]);
+
   if (!identifiedPlace) {
     return (
       <div className="center">
-        <h2>could'nt find Place</h2>
+        <Card className="paddingCard">
+          <h2>could'nt find Place</h2>
+        </Card>
       </div>
     );
   }
 
-  
   const submitHandler = (e) => {
     e.preventDefault();
     console.log(formState.inputs); // send this to Backend
   };
+
+  if (isLoading) {
+    return (
+      <div className="center">
+        <h2>Loading</h2>
+      </div>
+    );
+  }
 
   return (
     <form className="place-form" onSubmit={submitHandler}>
