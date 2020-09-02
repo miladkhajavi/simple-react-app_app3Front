@@ -7,6 +7,10 @@ const formReducer = (state, action) => {
 
       //note: *** state.inputs = in useReducer inputs:{title,..} *** //
       for (const InputID in state.inputs) {
+        //note: if any element id not found continue example:(switch comment 1)
+        if(!state.inputs[InputID]){
+          continue;
+        }
         if (InputID === action.InputID) {
           formValid = formValid && action.isValid;
         } else {
