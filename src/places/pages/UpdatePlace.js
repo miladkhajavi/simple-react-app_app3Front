@@ -134,6 +134,8 @@ const UpdatePlace = () => {
       <Button type="submit" disabled={!formState.isValid}>
         Update Place
       </Button>
+
+      <Button inverse to="/">Back</Button>
     </form>
   );
 };

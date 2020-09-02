@@ -2,26 +2,53 @@ import React, { useState } from "react";
 import Card from "../../shared/components/UIelement/card";
 import Button from "../../shared/components/FormElement/Button";
 import Modal from "../../shared/components/UIelement/Modal";
-import Map from "../../shared/components/UIelement/Map"
+import Map from "../../shared/components/UIelement/Map";
 import "./PlaceItem.css";
 
 const PlaceItem = (props) => {
   const [showMap, setShowMap] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const openModalMap = () => setShowMap(true);
   const closeModalMap = () => setShowMap(false);
+  const showConfirmDelete = () => setShowConfirm(true);
+  const cancelConfirmDelete = () => setShowConfirm(false);
+  const confirmDelete = () => {
+    setShowConfirm(false)
+    alert(`${props.title} deleted success`);
+  };
   return (
     <React.Fragment>
+      {/* modal show map */}
       <Modal
         show={showMap}
         onCancel={closeModalMap}
         header={props.address}
         contentClass="place-item__modal__content"
         footerClass="place-item__modal-action"
-        footer={<Button onClick={closeModalMap} >close</Button>}
+        footer={<Button onClick={closeModalMap}>close</Button>}
       >
         <div className="map-container">
           <Map center={props.coordinates} zoom={18} />
         </div>
+      </Modal>
+      {/* Modal delete */}
+      <Modal
+        show={showConfirm}
+        onCancel={cancelConfirmDelete}
+        header="Are you sure?"
+        footerClass="place-item__modal-action"
+        footer={
+          <React.Fragment>
+            <Button inverse onClick={cancelConfirmDelete}>Cancel</Button>
+            <Button danger onClick={confirmDelete}>Delete</Button>
+          </React.Fragment>
+        }
+      >
+        <p>
+          
+          Do you want to proceed and delete '{props.title}' place? please note that it
+          can't be undone thereafter
+        </p>
       </Modal>
 
       <li className="place-item">
@@ -37,9 +64,11 @@ const PlaceItem = (props) => {
           </div>
 
           <div className="place-item__actions">
-            <Button inverse onClick={openModalMap}>view on map</Button>
+            <Button inverse onClick={openModalMap}>
+              view on map
+            </Button>
             <Button to={`/places/${props.id}`}>edit</Button>
-            <Button danger>delete</Button>
+            <Button danger onClick={showConfirmDelete}>Delete</Button>
           </div>
         </Card>
       </li>
