@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext} from "react";
 import "./Auth.css";
 import Card from "../../shared/components/UIelement/card";
 import Input from "../../shared/components/FormElement/Input";
@@ -8,8 +8,11 @@ import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
+import {AuthContext} from "../../shared/context/auth-context"
 import { useForm } from "../../shared/hooks/form-hook";
 const Auth = () => {
+  const auth = useContext(AuthContext)
+
   const [isLoginMode, setIsLoginMode] = useState(true);
 
   const [formState, inputHandler,setFormData] = useForm(
@@ -60,6 +63,7 @@ const Auth = () => {
   const authSubmitHandler = (e) => {
     e.preventDefault();
     console.log(formState.inputs);
+    auth.login();
   };
 
   return (

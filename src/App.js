@@ -15,37 +15,59 @@ import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
 const App = () => {
   const [isLogin, setIsLoggedIn] = useState(false);
-  const login = useCallback(() => {
+  const loginCb = useCallback(() => {
     setIsLoggedIn(true);
   }, []);
-  const logout = useCallback(() => {
+  const logoutCb = useCallback(() => {
     setIsLoggedIn(false);
   }, []);
 
+  let routes;
+  if (isLogin) {
+    routes = (
+      <Switch>
+        <Route path="/" exact>
+          <Users />
+        </Route>
+        <Route path="/:uID/places" exact>
+          <UserPlaces />
+        </Route>
+        <Route path="/places/new" exact>
+          <NewPlace />
+        </Route>
+        <Route path="/places/:placeId">
+          <UpdatePlace />
+        </Route>
+
+        <Redirect to="/" />
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/" exact>
+          <Users />
+        </Route>
+        <Route path="/:uID/places" exact>
+          <UserPlaces />
+        </Route>
+        <Route path="/auth">
+          <Auth />
+        </Route>
+        <Redirect to="/auth" />
+      </Switch>
+    );
+  }
+
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: isLogin, login: login, logout: logout }}
+      value={{ isLoggedIn: isLogin, login: loginCb, logout: logoutCb }}
     >
       <Router>
         <MainNavigation />
         <main>
           <Switch>
-            <Route path="/" exact>
-              <Users />
-            </Route>
-            <Route path="/:uID/places" exact>
-              <UserPlaces />
-            </Route>
-            <Route path="/places/new" exact>
-              <NewPlace />
-            </Route>
-            <Route path="/places/:placeId">
-              <UpdatePlace />
-            </Route>
-            <Route path="/auth">
-              <Auth />
-            </Route>
-            <Redirect to="/" />
+            {routes}
           </Switch>
         </main>
       </Router>
