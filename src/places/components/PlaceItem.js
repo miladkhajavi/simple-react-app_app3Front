@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Card from "../../shared/components/UIelement/card";
 import Button from "../../shared/components/FormElement/Button";
 import Modal from "../../shared/components/UIelement/Modal";
 import Map from "../../shared/components/UIelement/Map";
+import { AuthContext } from "../../shared/context/auth-context";
 import "./PlaceItem.css";
 
 const PlaceItem = (props) => {
+  const auth = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const openModalMap = () => setShowMap(true);
@@ -13,7 +15,7 @@ const PlaceItem = (props) => {
   const showConfirmDelete = () => setShowConfirm(true);
   const cancelConfirmDelete = () => setShowConfirm(false);
   const confirmDelete = () => {
-    setShowConfirm(false)
+    setShowConfirm(false);
     alert(`${props.title} deleted success`);
   };
   return (
@@ -39,15 +41,18 @@ const PlaceItem = (props) => {
         footerClass="place-item__modal-action"
         footer={
           <React.Fragment>
-            <Button inverse onClick={cancelConfirmDelete}>Cancel</Button>
-            <Button danger onClick={confirmDelete}>Delete</Button>
+            <Button inverse onClick={cancelConfirmDelete}>
+              Cancel
+            </Button>
+            <Button danger onClick={confirmDelete}>
+              Delete
+            </Button>
           </React.Fragment>
         }
       >
         <p>
-          
-          Do you want to proceed and delete '{props.title}' place? please note that it
-          can't be undone thereafter
+          Do you want to proceed and delete '{props.title}' place? please note
+          that it can't be undone thereafter
         </p>
       </Modal>
 
@@ -67,8 +72,14 @@ const PlaceItem = (props) => {
             <Button inverse onClick={openModalMap}>
               view on map
             </Button>
-            <Button to={`/places/${props.id}`}>edit</Button>
-            <Button danger onClick={showConfirmDelete}>Delete</Button>
+            {auth.isLoggedIn && (
+              <Button to={`/places/${props.id}`}>Edit</Button>
+            )}
+            {auth.isLoggedIn && (
+              <Button danger onClick={showConfirmDelete}>
+                Delete
+              </Button>
+            )}
           </div>
         </Card>
       </li>
